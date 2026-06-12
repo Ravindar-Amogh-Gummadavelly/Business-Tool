@@ -2,13 +2,17 @@ import { useState } from 'react';
 import { useInventory } from '../hooks/useInventory';
 import { useApp } from '../context/AppContext';
 import { formatCurrency } from '../utils/formatters';
-import { Package, PlusCircle, Search, AlertTriangle, Archive } from 'lucide-react';
+import { useSearchParams } from 'react-router-dom';
+import { Package, PlusCircle, Search, AlertTriangle, Archive, ArrowUpRight, ArrowDownRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function InventoryPage() {
+  const navigate = useNavigate();
   const { inventory, loading, addProduct } = useInventory();
   const { currency } = useApp();
 
-  const [search, setSearch] = useState('');
+  const [searchParams] = useSearchParams();
+  const [search, setSearch] = useState(searchParams.get('search') || '');
   const [showModal, setShowModal] = useState(false);
   const [newProduct, setNewProduct] = useState({ name: '', defaultPrice: '', minPrice: '', maxPrice: '' });
 
@@ -95,6 +99,7 @@ export default function InventoryPage() {
                   <th className="py-3 px-4 text-left font-semibold text-slate-500 uppercase tracking-wider text-xs">Product Name</th>
                   <th className="py-3 px-4 text-right font-semibold text-slate-500 uppercase tracking-wider text-xs">Default Price</th>
                   <th className="py-3 px-4 text-right font-semibold text-slate-500 uppercase tracking-wider text-xs">Current Stock</th>
+                  <th className="py-3 px-4 text-center font-semibold text-slate-500 uppercase tracking-wider text-xs w-32">Quick Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -123,6 +128,24 @@ export default function InventoryPage() {
                           {item.stock <= 0 && <AlertTriangle className="w-3 h-3" />}
                           {item.stock} Units
                         </span>
+                      </td>
+                      <td className="py-3 px-4 text-center">
+                        <div className="flex items-center justify-center gap-2">
+                          <button
+                            onClick={() => navigate(`/new-entry?type=IN&product=${encodeURIComponent(item.name)}`)}
+                            className="p-1.5 rounded-lg text-emerald-600 bg-emerald-50 hover:bg-emerald-100 transition-colors tooltip-trigger"
+                            title="Log Purchase"
+                          >
+                            <ArrowDownRight className="w-4 h-4" />
+                          </button>
+                          <button
+                            onClick={() => navigate(`/new-entry?type=OUT&product=${encodeURIComponent(item.name)}`)}
+                            className="p-1.5 rounded-lg text-blue-600 bg-blue-50 hover:bg-blue-100 transition-colors tooltip-trigger"
+                            title="Log Sale"
+                          >
+                            <ArrowUpRight className="w-4 h-4" />
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))

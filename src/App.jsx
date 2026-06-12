@@ -21,12 +21,18 @@ import LedgerPage from './pages/LedgerPage';
 import SettingsPage from './pages/SettingsPage';
 import InventoryPage from './pages/InventoryPage';
 
-export default function App() {
+import LoginPage from './pages/LoginPage';
+import { useAppContext } from './context/AppContext';
+
+function RootApp() {
+  const { isAuthenticated } = useAppContext();
+
   return (
-    <AppProvider>
-      <BrowserRouter>
-        <Routes>
-          {/* Layout wraps all pages (sidebar + header) */}
+    <BrowserRouter>
+      <Routes>
+        {!isAuthenticated ? (
+          <Route path="*" element={<LoginPage />} />
+        ) : (
           <Route element={<Layout />}>
             <Route path="/" element={<DashboardPage />} />
             <Route path="/inventory" element={<InventoryPage />} />
@@ -35,9 +41,18 @@ export default function App() {
             <Route path="/analytics" element={<AnalyticsPage />} />
             <Route path="/ledger" element={<LedgerPage />} />
             <Route path="/settings" element={<SettingsPage />} />
+            <Route path="*" element={<DashboardPage />} />
           </Route>
-        </Routes>
-      </BrowserRouter>
+        )}
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default function App() {
+  return (
+    <AppProvider>
+      <RootApp />
     </AppProvider>
   );
 }

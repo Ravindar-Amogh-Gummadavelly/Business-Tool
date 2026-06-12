@@ -25,6 +25,7 @@ import {
   Upload,
 } from 'lucide-react';
 import Papa from 'papaparse';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useAppContext } from '../context/AppContext';
 import { usePurchases } from '../hooks/usePurchases';
 import { formatCurrency } from '../utils/formatters';
@@ -35,17 +36,19 @@ const PAGE_SIZE = 15;
    History Page
    ================================================================ */
 export default function HistoryPage() {
+  const navigate = useNavigate();
   const { currency } = useAppContext();
   const { purchases, loading } = usePurchases();
+  const [searchParams] = useSearchParams();
 
   /* ---- Filter state ---- */
   const [filtersOpen, setFiltersOpen] = useState(true);
   const [filters, setFilters] = useState({
-    dateFrom: '',
-    dateTo: '',
-    supplier: '',
-    voucher: '',
-    commodity: '',
+    dateFrom: searchParams.get('dateFrom') || '',
+    dateTo: searchParams.get('dateTo') || '',
+    supplier: searchParams.get('supplier') || '',
+    voucher: searchParams.get('voucher') || '',
+    commodity: searchParams.get('product') || '',
   });
 
   /* ---- Sort state ---- */
@@ -242,8 +245,9 @@ export default function HistoryPage() {
   const pagedData = filteredData.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
   /* ---- Column header helper ---- */
-  const ColHeader = ({ label, columnKey, align = 'left' }) => (
+  const renderColHeader = (label, columnKey, align = 'left') => (
     <th
+      key={columnKey}
       className={`pb-3 font-semibold text-slate-500 text-xs uppercase tracking-wider cursor-pointer select-none hover:text-slate-700 transition-colors ${
         align === 'right' ? 'text-right' : align === 'center' ? 'text-center' : 'text-left'
       }`}
@@ -432,14 +436,14 @@ export default function HistoryPage() {
               <table className="w-full text-sm min-w-[800px]">
                 <thead>
                   <tr className="border-b border-slate-200">
-                    <ColHeader label="Date" columnKey="date" />
-                    <ColHeader label="Voucher #" columnKey="voucher" />
-                    <ColHeader label="Type" columnKey="entryType" />
-                    <ColHeader label="Supplier / Customer" columnKey="supplier" />
-                    <ColHeader label="Items" columnKey="items" align="center" />
-                    <ColHeader label="Product Subtotal" columnKey="subtotal" align="right" />
-                    <ColHeader label="Logistics" columnKey="logistics" align="right" />
-                    <ColHeader label="Grand Total" columnKey="total" align="right" />
+                    {renderColHeader('Date', 'date')}
+                    {renderColHeader('Voucher #', 'voucher')}
+                    {renderColHeader('Type', 'entryType')}
+                    {renderColHeader('Supplier / Customer', 'supplier')}
+                    {renderColHeader('Items', 'items', 'center')}
+                    {renderColHeader('Product Subtotal', 'subtotal', 'right')}
+                    {renderColHeader('Logistics', 'logistics', 'right')}
+                    {renderColHeader('Grand Total', 'total', 'right')}
                     <th className="w-8"></th>
                   </tr>
                 </thead>
@@ -519,7 +523,14 @@ export default function HistoryPage() {
                                   <tbody>
                                     {(entry.items || []).map((item, j) => (
                                       <tr key={j} className="border-b border-indigo-50">
-                                        <td className="py-2 text-slate-700">{item.commodity}</td>
+                                        <td className="py-2">
+                                          <button
+                                            onClick={() => navigate(`/inventory?search=${encodeURIComponent(item.commodity)}`)}
+                                            className="text-indigo-600 hover:text-indigo-800 font-medium hover:underline transition-colors text-left"
+                                          >
+                                            {item.commodity}
+                                          </button>
+                                        </td>
                                         <td className="py-2 text-right text-slate-600">
                                           {item.quantity}
                                         </td>

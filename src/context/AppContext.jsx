@@ -36,12 +36,35 @@ const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
  * @param {React.ReactNode} props.children
  */
 export function AppProvider({ children }) {
+  // ── Auth State ────────────────────────────────
+  const [token, setTokenState] = useState(localStorage.getItem('token') || null);
+  const [user, setUserState] = useState(JSON.parse(localStorage.getItem('user') || 'null'));
+  const isAuthenticated = !!token;
+
+  const setToken = useCallback((newToken) => {
+    if (newToken) localStorage.setItem('token', newToken);
+    else localStorage.removeItem('token');
+    setTokenState(newToken);
+  }, []);
+
+  const setUser = useCallback((newUser) => {
+    if (newUser) localStorage.setItem('user', JSON.stringify(newUser));
+    else localStorage.removeItem('user');
+    setUserState(newUser);
+  }, []);
+
+  const login = useCallback((userData, tokenData) => {
+    setToken(tokenData);
+    setUser(userData);
+  }, [setToken, setUser]);
+
+  const logout = useCallback(() => {
+    setToken(null);
+    setUser(null);
+  }, [setToken, setUser]);
+
   // ── Currency ─────────────────────────────────
   const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
-
-  // ── User / Auth ──────────────────────────────
-  const [user, setUser] = useState(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   // ── Sidebar ──────────────────────────────────
   const [sidebarOpen, setSidebarOpen] = useState(true);
@@ -52,23 +75,6 @@ export function AppProvider({ children }) {
   /* ────────────────────────────────────────────
      Actions
      ──────────────────────────────────────────── */
-
-  /**
-   * Login — set user data and mark as authenticated.
-   * @param {Object} userData — { name, email, picture, ... }
-   */
-  const login = useCallback((userData) => {
-    setUser(userData);
-    setIsAuthenticated(true);
-  }, []);
-
-  /**
-   * Logout — clear user data and mark as unauthenticated.
-   */
-  const logout = useCallback(() => {
-    setUser(null);
-    setIsAuthenticated(false);
-  }, []);
 
   /**
    * Toggle the sidebar open/closed.
@@ -126,6 +132,7 @@ export function AppProvider({ children }) {
   const contextValue = useMemo(
     () => ({
       // State
+      token,
       currency,
       user,
       isAuthenticated,
@@ -133,6 +140,7 @@ export function AppProvider({ children }) {
       toasts,
 
       // Actions
+      setToken,
       setCurrency,
       setUser,
       login,
@@ -141,7 +149,7 @@ export function AppProvider({ children }) {
       addToast,
       removeToast,
     }),
-    [currency, user, isAuthenticated, sidebarOpen, toasts, login, logout, toggleSidebar, addToast, removeToast]
+    [token, currency, user, isAuthenticated, sidebarOpen, toasts, setToken, login, logout, toggleSidebar, addToast, removeToast]
   );
 
   /* ────────────────────────────────────────────

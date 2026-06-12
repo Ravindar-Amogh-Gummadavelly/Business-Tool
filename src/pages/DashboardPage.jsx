@@ -302,7 +302,7 @@ export default function DashboardPage() {
                     <tr
                       key={entry.id || i}
                       className="border-b border-slate-100 hover:bg-indigo-50/50 cursor-pointer transition-colors"
-                      onClick={() => navigate('/history')}
+                      onClick={() => navigate(`/history?voucher=${encodeURIComponent(entry.voucherNumber)}`)}
                     >
                       <td className="py-3 text-slate-600">{entry.date}</td>
                       <td className="py-3">

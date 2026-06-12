@@ -91,17 +91,6 @@ function generateDate(daysBack) {
   return date;
 }
 
-/**
- * Generate a purchase ID: PH-YYYYMMDD-XXXX
- */
-function makePurchaseId(date, index) {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
-  const suffix = String(index).padStart(4, '0');
-  return `PH-${y}${m}${d}-${suffix}`;
-}
-
 /* ============================================================
    Generate Sample Data
    ============================================================ */
@@ -400,12 +389,7 @@ export function getSampleAnalyticsData() {
     }))
     .sort((a, b) => b.spend - a.spend);
 
-  // Price trend per commodity (daily avg price)
   const priceTrends = {};
-  COMMODITIES.forEach((c) => {
-    priceTrends[c.name] = [];
-  });
-
   // Group items by date and commodity
   items.forEach((item) => {
     const header = headers.find((h) => h.Purchase_ID === item.Purchase_ID);

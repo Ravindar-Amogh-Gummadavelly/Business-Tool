@@ -9,8 +9,8 @@
  *  3. Totals (product subtotal, logistics, grand total)
  *  4. Submit with validation, success modal
  */
-import { useState, useCallback, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useState, useCallback, useMemo, useEffect } from 'react';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   Plus,
   Trash2,
@@ -46,12 +46,17 @@ function blankItem() {
    ================================================================ */
 export default function NewEntryPage() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   const { currency } = useAppContext();
   const { inventory, loading: invLoading, addProduct } = useInventory();
 
+  /* ---- Parse Query Params ---- */
+  const initialType = searchParams.get('type') === 'OUT' ? 'Outward' : 'Inward';
+  const initialProduct = searchParams.get('product') || '';
+
   /* ---- Form State ---- */
   const [form, setForm] = useState({
-    entryType: 'Inward', // 'Inward' (Purchase) or 'Outward' (Sale)
+    entryType: initialType,
     billingDate: todayISO(),
     voucherNumber: '',
     supplierName: '',
@@ -59,10 +64,23 @@ export default function NewEntryPage() {
     notes: '',
   });
 
-  const [items, setItems] = useState([blankItem()]);
+  const [items, setItems] = useState(
+    initialProduct ? [{ ...blankItem(), commodity: initialProduct }] : [blankItem()]
+  );
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+
+  /* ---- Auto-fill initial product price when inventory loads ---- */
+  useEffect(() => {
+    if (!invLoading && initialProduct && items.length === 1 && !items[0].unitPrice) {
+      const prod = inventory.find(p => p.name === initialProduct);
+      if (prod) {
+        setItems(prev => [{ ...prev[0], unitPrice: prod.defaultPrice }]);
+      }
+    }
+  }, [invLoading, inventory, initialProduct, items]);
+
 
   /* ---- Quick Add Product State ---- */
   const [showNewProduct, setShowNewProduct] = useState(false);

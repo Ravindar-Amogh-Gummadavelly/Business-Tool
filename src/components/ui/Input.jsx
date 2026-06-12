@@ -1,0 +1,141 @@
+/**
+ * Input.jsx
+ * ─────────────────────────────────────────────────
+ * Reusable text input component with label, error
+ * state, icons, prefix/suffix, and focus animations.
+ * ─────────────────────────────────────────────────
+ */
+
+/**
+ * Input — premium styled text input field.
+ *
+ * @param {Object} props
+ * @param {string}   props.label       — Label text
+ * @param {string}   props.type        — Input type (text, number, email, password, etc.)
+ * @param {string}   props.value       — Current value
+ * @param {Function} props.onChange     — Change handler
+ * @param {string}   props.placeholder — Placeholder text
+ * @param {string}   props.error       — Error message (shows red border + message)
+ * @param {boolean}  props.required    — Required field indicator
+ * @param {boolean}  props.disabled    — Disabled state
+ * @param {string}   props.id          — Unique ID
+ * @param {string}   props.className   — Additional CSS classes
+ * @param {React.ComponentType} props.icon — Lucide icon component (left side)
+ * @param {string}   props.prefix      — Prefix text (e.g. currency symbol "₹")
+ * @param {string}   props.suffix      — Suffix text (e.g. unit "pcs")
+ * @param {string}   props.helpText    — Helper text below input
+ */
+export default function Input({
+  label,
+  type = 'text',
+  value,
+  onChange,
+  placeholder,
+  error,
+  required = false,
+  disabled = false,
+  id,
+  className = '',
+  icon: Icon,
+  prefix,
+  suffix,
+  helpText,
+  ...rest
+}) {
+  // Dynamic border color based on state
+  const borderColor = error
+    ? 'border-red-400 focus-within:border-red-500 focus-within:ring-red-200'
+    : 'border-slate-200 focus-within:border-primary-400 focus-within:ring-primary-200';
+
+  return (
+    <div className={`flex flex-col gap-1.5 ${className}`}>
+      {/* Label */}
+      {label && (
+        <label
+          htmlFor={id}
+          className="text-sm font-medium text-slate-700 flex items-center gap-1"
+        >
+          {label}
+          {required && (
+            <span className="text-red-500 text-xs" aria-label="required">*</span>
+          )}
+        </label>
+      )}
+
+      {/* Input wrapper */}
+      <div
+        className={
+          `flex items-center rounded-xl border bg-white ` +
+          `transition-all duration-200 ease-out ` +
+          `focus-within:ring-2 focus-within:ring-offset-0 ` +
+          `${borderColor} ` +
+          `${disabled ? 'bg-slate-50 opacity-60 cursor-not-allowed' : 'hover:border-slate-300'}`
+        }
+      >
+        {/* Left icon */}
+        {Icon && (
+          <span className="pl-3 text-slate-400 flex-shrink-0">
+            <Icon size={18} />
+          </span>
+        )}
+
+        {/* Prefix (e.g. ₹) */}
+        {prefix && (
+          <span className="pl-3 pr-1 text-slate-500 font-medium text-sm select-none flex-shrink-0">
+            {prefix}
+          </span>
+        )}
+
+        {/* Input element */}
+        <input
+          id={id}
+          type={type}
+          value={value}
+          onChange={onChange}
+          placeholder={placeholder}
+          required={required}
+          disabled={disabled}
+          className={
+            `w-full px-3 py-2.5 bg-transparent text-slate-800 text-sm ` +
+            `placeholder:text-slate-400 ` +
+            `outline-none border-none ` +
+            `disabled:cursor-not-allowed ` +
+            `${!Icon && !prefix ? 'rounded-l-xl' : ''} ` +
+            `${!suffix ? 'rounded-r-xl' : ''}`
+          }
+          {...rest}
+        />
+
+        {/* Suffix (e.g. pcs, kg) */}
+        {suffix && (
+          <span className="pr-3 pl-1 text-slate-400 text-sm font-medium select-none flex-shrink-0">
+            {suffix}
+          </span>
+        )}
+      </div>
+
+      {/* Error message */}
+      {error && (
+        <p className="text-xs text-red-500 flex items-center gap-1 mt-0.5 animate-fade-in">
+          <svg
+            className="w-3.5 h-3.5 flex-shrink-0"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              fillRule="evenodd"
+              d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z"
+              clipRule="evenodd"
+            />
+          </svg>
+          {error}
+        </p>
+      )}
+
+      {/* Help text */}
+      {helpText && !error && (
+        <p className="text-xs text-slate-400 mt-0.5">{helpText}</p>
+      )}
+    </div>
+  );
+}

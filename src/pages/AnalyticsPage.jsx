@@ -42,8 +42,8 @@ import { useAnalytics } from '../hooks/useAnalytics';
 import { formatCurrency } from '../utils/formatters';
 
 /* ---- Chart color palette ---- */
-const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316', '#06b6d4'];
-const PIE_COLORS = ['#6366f1', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
+const COLORS = ['#2563EB', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316', '#06b6d4'];
+const PIE_COLORS = ['#2563EB', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
 
 /* ---- Tab IDs ---- */
 const TABS = [
@@ -198,11 +198,11 @@ export default function AnalyticsPage() {
                   margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
                   layout="vertical"
                 >
-                  <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" horizontal={false} />
-                  <XAxis type="number" tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} tickFormatter={(v) => formatCurrency(v, currency, true)} />
-                  <YAxis type="category" dataKey="name" tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} width={120} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#6C7293" horizontal={false} />
+                  <XAxis type="number" tick={{ fontSize: 12, fill: '#6C7293' }} axisLine={false} tickLine={false} tickFormatter={(v) => formatCurrency(v, currency, true)} />
+                  <YAxis type="category" dataKey="name" tick={{ fontSize: 12, fill: '#6C7293' }} axisLine={false} tickLine={false} width={120} />
                   <Tooltip content={<ChartTooltip currency={currency} />} />
-                  <Bar dataKey="value" fill="#6366f1" radius={[0, 6, 6, 0]} maxBarSize={32} />
+                  <Bar dataKey="value" fill="#2563EB" radius={[0, 6, 6, 0]} maxBarSize={32} />
                 </BarChart>
               </ResponsiveContainer>
             </div>
@@ -299,12 +299,12 @@ export default function AnalyticsPage() {
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <LineChart data={weekly.dailyTrend || []} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                    <XAxis dataKey="day" tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} width={60} tickFormatter={(v) => formatCurrency(v, currency, true)} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#6C7293" vertical={false} />
+                    <XAxis dataKey="day" tick={{ fontSize: 12, fill: '#6C7293' }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 12, fill: '#6C7293' }} axisLine={false} tickLine={false} width={60} tickFormatter={(v) => formatCurrency(v, currency, true)} />
                     <Tooltip content={<ChartTooltip currency={currency} />} />
                     <Legend />
-                    <Line type="monotone" dataKey="product" stroke="#6366f1" strokeWidth={2.5} dot={{ r: 4, fill: '#6366f1' }} name="Product" />
+                    <Line type="monotone" dataKey="product" stroke="#2563EB" strokeWidth={2.5} dot={{ r: 4, fill: '#2563EB' }} name="Product" />
                     <Line type="monotone" dataKey="logistics" stroke="#10b981" strokeWidth={2.5} dot={{ r: 4, fill: '#10b981' }} name="Logistics" />
                   </LineChart>
                 </ResponsiveContainer>
@@ -319,9 +319,9 @@ export default function AnalyticsPage() {
               <div className="h-72">
                 <ResponsiveContainer width="100%" height="100%">
                   <BarChart data={weekly.commodityByDay || []} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                    <XAxis dataKey="day" tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} width={60} tickFormatter={(v) => formatCurrency(v, currency, true)} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#6C7293" vertical={false} />
+                    <XAxis dataKey="day" tick={{ fontSize: 12, fill: '#6C7293' }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 12, fill: '#6C7293' }} axisLine={false} tickLine={false} width={60} tickFormatter={(v) => formatCurrency(v, currency, true)} />
                     <Tooltip content={<ChartTooltip currency={currency} />} />
                     <Legend />
                     {(weekly.commodityNames || []).slice(0, 5).map((name, i) => (
@@ -417,15 +417,15 @@ export default function AnalyticsPage() {
                   <AreaChart data={monthly.cumulativeTrend || []} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
                     <defs>
                       <linearGradient id="monthlyAreaGradient" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#6366f1" stopOpacity={0.3} />
-                        <stop offset="100%" stopColor="#6366f1" stopOpacity={0.02} />
+                        <stop offset="0%" stopColor="#2563EB" stopOpacity={0.3} />
+                        <stop offset="100%" stopColor="#2563EB" stopOpacity={0.02} />
                       </linearGradient>
                     </defs>
-                    <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                    <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
-                    <YAxis tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} width={70} tickFormatter={(v) => formatCurrency(v, currency, true)} />
+                    <CartesianGrid strokeDasharray="3 3" stroke="#6C7293" vertical={false} />
+                    <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#6C7293' }} axisLine={false} tickLine={false} />
+                    <YAxis tick={{ fontSize: 12, fill: '#6C7293' }} axisLine={false} tickLine={false} width={70} tickFormatter={(v) => formatCurrency(v, currency, true)} />
                     <Tooltip content={<ChartTooltip currency={currency} />} />
-                    <Area type="monotone" dataKey="cumulative" stroke="#6366f1" strokeWidth={2.5} fill="url(#monthlyAreaGradient)" dot={false} name="Cumulative" />
+                    <Area type="monotone" dataKey="cumulative" stroke="#2563EB" strokeWidth={2.5} fill="url(#monthlyAreaGradient)" dot={false} name="Cumulative" />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -543,9 +543,9 @@ export default function AnalyticsPage() {
         <div className="h-72">
           <ResponsiveContainer width="100%" height="100%">
             <LineChart data={commodityTrends} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-              <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
-              <YAxis tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} width={60} tickFormatter={(v) => formatCurrency(v, currency, true)} />
+              <CartesianGrid strokeDasharray="3 3" stroke="#6C7293" vertical={false} />
+              <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#6C7293' }} axisLine={false} tickLine={false} />
+              <YAxis tick={{ fontSize: 12, fill: '#6C7293' }} axisLine={false} tickLine={false} width={60} tickFormatter={(v) => formatCurrency(v, currency, true)} />
               <Tooltip content={<ChartTooltip currency={currency} />} />
               <Legend />
               {availableCommodities.map((name, i) =>

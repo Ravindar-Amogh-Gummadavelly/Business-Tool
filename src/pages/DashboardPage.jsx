@@ -40,7 +40,7 @@ import { useAnalytics } from '../hooks/useAnalytics';
 import { formatCurrency } from '../utils/formatters';
 
 /* ---- Pie chart colors ---- */
-const PIE_COLORS = ['#6366f1', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
+const PIE_COLORS = ['#2563EB', '#10b981', '#f59e0b', '#8b5cf6', '#ec4899', '#14b8a6', '#f97316'];
 
 /* ================================================================
    Count-Up Animation Hook
@@ -219,13 +219,13 @@ export default function DashboardPage() {
               <BarChart data={weeklyTrend} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
                 <defs>
                   <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#6366f1" stopOpacity={0.9} />
-                    <stop offset="100%" stopColor="#818cf8" stopOpacity={0.6} />
+                    <stop offset="0%" stopColor="#2563EB" stopOpacity={0.9} />
+                    <stop offset="100%" stopColor="#2563EB" stopOpacity={0.6} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                <XAxis dataKey="day" tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} width={60} tickFormatter={(v) => formatCurrency(v, currency, true)} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#6C7293" vertical={false} />
+                <XAxis dataKey="day" tick={{ fontSize: 12, fill: '#6C7293' }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 12, fill: '#6C7293' }} axisLine={false} tickLine={false} width={60} tickFormatter={(v) => formatCurrency(v, currency, true)} />
                 <Tooltip content={<ChartTooltip currency={currency} />} />
                 <Bar dataKey="value" fill="url(#barGradient)" radius={[6, 6, 0, 0]} maxBarSize={48} />
               </BarChart>
@@ -241,22 +241,22 @@ export default function DashboardPage() {
               <AreaChart data={monthlyTrend} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
                 <defs>
                   <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#6366f1" stopOpacity={0.3} />
-                    <stop offset="100%" stopColor="#6366f1" stopOpacity={0.02} />
+                    <stop offset="0%" stopColor="#2563EB" stopOpacity={0.3} />
+                    <stop offset="100%" stopColor="#2563EB" stopOpacity={0.02} />
                   </linearGradient>
                 </defs>
-                <CartesianGrid strokeDasharray="3 3" stroke="#e2e8f0" vertical={false} />
-                <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#64748b' }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 12, fill: '#64748b' }} axisLine={false} tickLine={false} width={60} tickFormatter={(v) => formatCurrency(v, currency, true)} />
+                <CartesianGrid strokeDasharray="3 3" stroke="#6C7293" vertical={false} />
+                <XAxis dataKey="date" tick={{ fontSize: 11, fill: '#6C7293' }} axisLine={false} tickLine={false} />
+                <YAxis tick={{ fontSize: 12, fill: '#6C7293' }} axisLine={false} tickLine={false} width={60} tickFormatter={(v) => formatCurrency(v, currency, true)} />
                 <Tooltip content={<ChartTooltip currency={currency} />} />
                 <Area
                   type="monotone"
                   dataKey="value"
-                  stroke="#6366f1"
+                  stroke="#2563EB"
                   strokeWidth={2.5}
                   fill="url(#areaGradient)"
-                  dot={{ r: 3, fill: '#6366f1', strokeWidth: 0 }}
-                  activeDot={{ r: 5, fill: '#4f46e5', strokeWidth: 2, stroke: '#fff' }}
+                  dot={{ r: 3, fill: '#2563EB', strokeWidth: 0 }}
+                  activeDot={{ r: 5, fill: '#2563EB', strokeWidth: 2, stroke: '#fff' }}
                 />
               </AreaChart>
             </ResponsiveContainer>
@@ -354,7 +354,7 @@ export default function DashboardPage() {
                       formatter={(val) => formatCurrency(val, currency)}
                       contentStyle={{
                         borderRadius: '0.75rem',
-                        border: '1px solid #e2e8f0',
+                        border: '1px solid #6C7293',
                         boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
                       }}
                     />

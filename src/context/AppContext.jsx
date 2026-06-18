@@ -10,7 +10,6 @@
  */
 
 import { createContext, useContext, useState, useCallback, useMemo } from 'react';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 import { DEFAULT_CURRENCY, TOAST_CONFIG } from '../utils/constants';
 
 /* ============================================================
@@ -19,11 +18,7 @@ import { DEFAULT_CURRENCY, TOAST_CONFIG } from '../utils/constants';
 
 const AppContext = createContext(null);
 
-/* ============================================================
-   Google OAuth Client ID from env
-   ============================================================ */
 
-const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
 
 /* ============================================================
    Provider Component
@@ -36,32 +31,7 @@ const GOOGLE_CLIENT_ID = import.meta.env.VITE_GOOGLE_CLIENT_ID || '';
  * @param {React.ReactNode} props.children
  */
 export function AppProvider({ children }) {
-  // ── Auth State ────────────────────────────────
-  const [token, setTokenState] = useState(localStorage.getItem('token') || null);
-  const [user, setUserState] = useState(JSON.parse(localStorage.getItem('user') || 'null'));
-  const isAuthenticated = !!token;
 
-  const setToken = useCallback((newToken) => {
-    if (newToken) localStorage.setItem('token', newToken);
-    else localStorage.removeItem('token');
-    setTokenState(newToken);
-  }, []);
-
-  const setUser = useCallback((newUser) => {
-    if (newUser) localStorage.setItem('user', JSON.stringify(newUser));
-    else localStorage.removeItem('user');
-    setUserState(newUser);
-  }, []);
-
-  const login = useCallback((userData, tokenData) => {
-    setToken(tokenData);
-    setUser(userData);
-  }, [setToken, setUser]);
-
-  const logout = useCallback(() => {
-    setToken(null);
-    setUser(null);
-  }, [setToken, setUser]);
 
   // ── Currency ─────────────────────────────────
   const [currency, setCurrency] = useState(DEFAULT_CURRENCY);
@@ -132,48 +102,28 @@ export function AppProvider({ children }) {
   const contextValue = useMemo(
     () => ({
       // State
-      token,
       currency,
-      user,
-      isAuthenticated,
       sidebarOpen,
       toasts,
 
       // Actions
-      setToken,
       setCurrency,
-      setUser,
-      login,
-      logout,
       toggleSidebar,
       addToast,
       removeToast,
     }),
-    [token, currency, user, isAuthenticated, sidebarOpen, toasts, setToken, login, logout, toggleSidebar, addToast, removeToast]
+    [currency, sidebarOpen, toasts, toggleSidebar, addToast, removeToast]
   );
 
   /* ────────────────────────────────────────────
      Render — optionally wrap with GoogleOAuthProvider
      ──────────────────────────────────────────── */
 
-  const content = (
+  return (
     <AppContext.Provider value={contextValue}>
       {children}
     </AppContext.Provider>
   );
-
-  // Wrap with GoogleOAuthProvider only if a real Client ID is provided
-  const isValidClientId = GOOGLE_CLIENT_ID && GOOGLE_CLIENT_ID !== 'YOUR_GOOGLE_CLIENT_ID';
-
-  if (isValidClientId) {
-    return (
-      <GoogleOAuthProvider clientId={GOOGLE_CLIENT_ID}>
-        {content}
-      </GoogleOAuthProvider>
-    );
-  }
-
-  return content;
 }
 
 /* ============================================================

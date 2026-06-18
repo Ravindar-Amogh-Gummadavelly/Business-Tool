@@ -7,10 +7,8 @@
  */
 import { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
-import { Menu, Bell, Clock, LogOut, User, ChevronDown } from 'lucide-react';
-import { GoogleLogin } from '@react-oauth/google';
-import { jwtDecode } from 'jwt-decode';
-import { useApp } from '../../context/AppContext';
+import { Menu, Bell, Clock, ChevronDown } from 'lucide-react';
+import { UserButton } from '@clerk/clerk-react';
 
 /* Map route path → page title */
 const PAGE_TITLES = {
@@ -25,7 +23,6 @@ const PAGE_TITLES = {
 
 export default function Header({ onMenuClick }) {
   const { pathname } = useLocation();
-  const { user, setUser } = useApp();
 
   /* ---- Live clock ---- */
   const [now, setNow] = useState(new Date());
@@ -44,37 +41,6 @@ export default function Header({ onMenuClick }) {
     minute: '2-digit',
     second: '2-digit',
   });
-
-  /* ---- User dropdown ---- */
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropRef = useRef(null);
-
-  useEffect(() => {
-    function handleOutside(e) {
-      if (dropRef.current && !dropRef.current.contains(e.target)) setDropdownOpen(false);
-    }
-    document.addEventListener('mousedown', handleOutside);
-    return () => document.removeEventListener('mousedown', handleOutside);
-  }, []);
-
-  /* ---- Google login success ---- */
-  const handleLoginSuccess = (credentialResponse) => {
-    try {
-      const decoded = jwtDecode(credentialResponse.credential);
-      setUser({
-        name: decoded.name,
-        email: decoded.email,
-        picture: decoded.picture,
-      });
-    } catch (err) {
-      console.error('Google login decode error', err);
-    }
-  };
-
-  const handleLogout = () => {
-    setUser(null);
-    setDropdownOpen(false);
-  };
 
   const pageTitle = PAGE_TITLES[pathname] || 'StockFlow';
 
@@ -120,71 +86,7 @@ export default function Header({ onMenuClick }) {
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full" />
         </button>
 
-        {/* Google Login / User Avatar */}
-        {user ? (
-          <div ref={dropRef} className="relative">
-            <button
-              id="user-menu-trigger"
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
-            >
-              {user.picture ? (
-                <img
-                  src={user.picture}
-                  alt={user.name}
-                  className="w-8 h-8 rounded-full border-2 border-indigo-200"
-                />
-              ) : (
-                <div className="w-8 h-8 rounded-full bg-indigo-600 flex items-center justify-center text-white text-xs font-bold">
-                  {user.name?.charAt(0)?.toUpperCase() || 'U'}
-                </div>
-              )}
-              <span className="hidden md:block text-sm font-medium text-slate-700 max-w-[120px] truncate">
-                {user.name}
-              </span>
-              <ChevronDown className="hidden md:block w-4 h-4 text-slate-400" />
-            </button>
-
-            {/* Dropdown */}
-            {dropdownOpen && (
-              <div className="absolute right-0 top-full mt-2 w-56 bg-white rounded-xl shadow-lg border border-slate-200 py-2 z-50 animate-fade-in-up">
-                <div className="px-4 py-2 border-b border-slate-100">
-                  <p className="text-sm font-medium text-slate-800 truncate">{user.name}</p>
-                  <p className="text-xs text-slate-500 truncate">{user.email}</p>
-                </div>
-                <button
-                  id="logout-button"
-                  onClick={handleLogout}
-                  className="w-full flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors"
-                >
-                  <LogOut className="w-4 h-4" />
-                  Sign out
-                </button>
-              </div>
-            )}
-          </div>
-        ) : (
-          <div id="google-login-button" data-testid="google-login-button">
-            {import.meta.env.VITE_GOOGLE_CLIENT_ID && import.meta.env.VITE_GOOGLE_CLIENT_ID !== 'YOUR_GOOGLE_CLIENT_ID' ? (
-              <GoogleLogin
-                onSuccess={handleLoginSuccess}
-                onError={() => console.error('Google login failed')}
-                size="medium"
-                shape="pill"
-                theme="outline"
-                text="signin"
-              />
-            ) : (
-              <button
-                className="flex items-center gap-2 px-4 py-2 rounded-full border border-slate-200 text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 transition-colors"
-                onClick={() => alert('Google Login is disabled. Please set VITE_GOOGLE_CLIENT_ID in your .env file to enable it.')}
-              >
-                <User className="w-4 h-4" />
-                Sign in
-              </button>
-            )}
-          </div>
-        )}
+        <UserButton afterSignOutUrl="/" />
       </div>
     </header>
   );

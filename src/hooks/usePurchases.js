@@ -48,6 +48,7 @@ function transformPurchases(raw) {
     grandTotal: h.Grand_Total || 0,
     notes: h.Notes || '',
     status: h.Status || 'Received',
+    billUrl: h.Bill_URL || '',
     items: itemsByPurchaseId[h.Purchase_ID] || [],
   }));
 }

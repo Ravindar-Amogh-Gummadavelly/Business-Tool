@@ -441,6 +441,7 @@ export default function HistoryPage() {
                     {renderColHeader('Type', 'entryType')}
                     {renderColHeader('Supplier / Customer', 'supplier')}
                     {renderColHeader('Items', 'items', 'center')}
+                    {renderColHeader('Bill', 'bill', 'center')}
                     {renderColHeader('Product Subtotal', 'subtotal', 'right')}
                     {renderColHeader('Logistics', 'logistics', 'right')}
                     {renderColHeader('Grand Total', 'total', 'right')}
@@ -476,6 +477,15 @@ export default function HistoryPage() {
                           <td className="py-3 text-center text-slate-600">
                             {(entry.items || []).length}
                           </td>
+                          <td className="py-3 text-center">
+                            {entry.billUrl ? (
+                              <a href={entry.billUrl} target="_blank" rel="noreferrer" onClick={(e) => e.stopPropagation()} className="inline-flex items-center justify-center p-1.5 bg-indigo-50 text-indigo-600 rounded hover:bg-indigo-100 transition-colors" title="View Bill">
+                                <FileText className="w-4 h-4" />
+                              </a>
+                            ) : (
+                              <span className="text-slate-300">—</span>
+                            )}
+                          </td>
                           <td className="py-3 text-right text-slate-700 font-medium">
                             {formatCurrency(entry.productSubtotal, currency)}
                           </td>
@@ -497,7 +507,7 @@ export default function HistoryPage() {
                         {/* Expanded detail row */}
                         {isExpanded && (
                           <tr className="bg-indigo-50/30">
-                            <td colSpan={8} className="px-6 py-4">
+                            <td colSpan={9} className="px-6 py-4">
                               <div className="space-y-3">
                                 {/* Items sub-table */}
                                 <table className="w-full text-sm">

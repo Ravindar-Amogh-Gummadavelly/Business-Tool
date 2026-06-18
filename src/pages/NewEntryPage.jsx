@@ -62,6 +62,7 @@ export default function NewEntryPage() {
     supplierName: '',
     logisticsCharges: '',
     notes: '',
+    billFile: null,
   });
 
   const [items, setItems] = useState(
@@ -165,6 +166,7 @@ export default function NewEntryPage() {
           supplierName: form.supplierName.trim(),
           logisticsCharges: logistics,
           notes: form.notes.trim(),
+          billFile: form.billFile,
           items: items.map((it) => ({
             commodity: it.commodity.trim(),
             quantity: parseFloat(it.quantity),
@@ -196,6 +198,7 @@ export default function NewEntryPage() {
       supplierName: '',
       logisticsCharges: '',
       notes: '',
+      billFile: null,
     });
     setItems([blankItem()]);
     setErrors({});
@@ -335,7 +338,7 @@ export default function NewEntryPage() {
             </div>
 
             {/* Notes - full width */}
-            <div className="sm:col-span-2 lg:col-span-4">
+            <div className="sm:col-span-2 lg:col-span-2">
               <label htmlFor="entry-notes" className="block text-sm font-medium text-slate-600 mb-1.5">
                 Notes
               </label>
@@ -346,6 +349,20 @@ export default function NewEntryPage() {
                 value={form.notes}
                 onChange={(e) => handleFieldChange('notes', e.target.value)}
                 className={`${inputClass()} resize-none`}
+              />
+            </div>
+
+            {/* Bill Attachment */}
+            <div className="sm:col-span-2 lg:col-span-2">
+              <label htmlFor="bill-file" className="block text-sm font-medium text-slate-600 mb-1.5 flex items-center gap-2">
+                Attach Bill <span className="text-xs font-normal text-slate-400">(Optional Image/PDF)</span>
+              </label>
+              <input
+                id="bill-file"
+                type="file"
+                accept="image/*,.pdf"
+                onChange={(e) => handleFieldChange('billFile', e.target.files[0])}
+                className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none file:mr-4 file:py-1.5 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 transition-colors"
               />
             </div>
           </div>
